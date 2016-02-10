@@ -1,0 +1,47 @@
+<ion-view view-title="How was your day today?">
+
+    <ion-content style="top:0;">
+        <ion-tabs class="tabs-top tabs-icon-top has-header">
+            <ion-tab title="LOVE" icon-on="ion-heart" icon-off="ion-heart">
+                <!-- Tab 1 content -->
+                <div class="padding" >
+                    <h2 class="title ">What were some of the best part of today?</h2>
+                    <p></p>
+                    <ion-scroll direction="x" class="item " style="padding:5px">
+                        <button data-ng-repeat="item in recent|filter:{love:'!!'}" class="horizontaList button" ng-click="addFromRecent(item.id, 'love');">
+                            {{item.love}}
+                        </button>      
+                    </ion-scroll>
+                    <div class="list inputTags">
+                        <label style="margin-top: 20px" class="item item-input" data-ng-repeat="item in entry track by $index" >
+                            <input type="text" ng-model="item.love">
+                        </label>
+                    </div>
+                    <button class="button button-full button-green">
+                        Done!
+                    </button>
+                </div>
+            </ion-tab>
+            <ion-tab title="AVOID" icon-on="ion-alert-circled" icon-off="ion-alert-circled">
+                <!-- Tab 2 content -->
+                <div class=" padding" >
+                    <h2 class="title ">What could you have avoided today?</h2>
+                    <p></p>
+                    <ion-scroll direction="x" class="item " style="padding:5px">
+                        <button data-ng-repeat="item in recent|filter:{avoid:'!!'}" class="horizontaList button" ng-click="addFromRecent(item.id, 'avoid');">
+                            {{item.avoid}}
+                        </button>      
+                    </ion-scroll>
+                    <div class="list inputTags">
+                        <label style="margin-top: 20px" class="item item-input" data-ng-repeat="item in entry track by $index" >
+                            <input type="text" ng-model="item.avoid">
+                        </label>
+                    </div>
+                    <button class="button button-full button-green">
+                        Done!
+                    </button>
+                </div>
+            </ion-tab>
+        </ion-tabs>
+</ion-content >
+</ion-view>
