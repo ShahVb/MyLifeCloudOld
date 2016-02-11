@@ -1,8 +1,11 @@
 angular.module('starter.services', [])
 
         .factory('recentTags', function ($http) {
-            var recent = [{id: 0, love: "Love1", avoid: "Avoid1"}, {id: 1, love: "Love2", avoid: "Avoid2"}, {id: 2, love: null, avoid: "Avoid3"}, {id: 3, love: "Love4", avoid: "Avoid4"},
-                {id: 4, love: "Love5", avoid: "Avoid5"}, {id: 5, love: "Love6", avoid: "Avoid6"}, {id: 6, love: "Love7", avoid: "Avoid7"}, {id: 7, love: "Love8", avoid: "Avoid8"}];
+            var recent = [{name: "love1", weight: 13,type:"love",id:1},{name: "love2", weight: 10.5,type:"love",id:2},{name: "love3", weight: 9.4,type:"love",id:3},{name: "love4", weight: 8,type:"love",id:4},{name: "love5", weight: 6.2,type:"love",id:5},
+            {name: "Consectetur", weight: 5,type:"avoid",id:1},{name: "Adipiscing", weight: 4,type:"avoid",id:1},{name: "Elit", weight: 4,type:"avoid",id:1},{name: "Nam et", weight: 3,type:"avoid",id:1}, {name: "Leo", weight: 4,type:"avoid",id:1}];
+
+            //[{id: 0, love: "Love1", avoid: "Avoid1"}, {id: 1, love: "Love2", avoid: "Avoid2"}, {id: 2, love: null, avoid: "Avoid3"}, {id: 3, love: "Love4", avoid: "Avoid4"},
+            //    {id: 4, love: "Love5", avoid: "Avoid5"}, {id: 5, love: "Love6", avoid: "Avoid6"}, {id: 6, love: "Love7", avoid: "Avoid7"}, {id: 7, love: "Love8", avoid: "Avoid8"}];
             var factory = {};
             factory.getRecentTags = function () {
                 return recent;
@@ -12,6 +15,7 @@ angular.module('starter.services', [])
         .service('tagsCloudService', function ($http, Backand) {
             var tagsCloudLove = this;
             var tagsCloudAvoid = this;
+            var tagsCloudData = this;
             var tagsCloud = this;
             this.tagsCloud = getTagsCloudData;
             function getTagsCloudData(callback) {
@@ -27,10 +31,12 @@ angular.module('starter.services', [])
                 }).success(function (data, status, header, config) {
                     callback(data);
                     console.log(data);
+                   // tagsCloudData = data.data;
                     var j = 0;
                     var k = 0;
                     for (i = 0; i < data.data.length; i++)
                     {
+                        tagsCloudData[i]=data.data[i];
                         if (data.data[i].type === "love")
                             tagsCloudLove[j++] = data.data[i];
                         else
@@ -44,13 +50,12 @@ angular.module('starter.services', [])
             }
             ;
 
-            //[{name: "Lorem", weight: 13,type:"love",id:1},{name: "Ipsum", weight: 10.5,type:"love",id:1},{name: "Dolor", weight: 9.4,type:"love",id:1},{name: "Sit", weight: 8,type:"love",id:1},{name: "Amet", weight: 6.2,type:"love",id:1},
-            //{name: "Consectetur", weight: 5,type:"avoid",id:1},{name: "Adipiscing", weight: 4,type:"avoid",id:1},{name: "Elit", weight: 4,type:"avoid",id:1},{name: "Nam et", weight: 3,type:"avoid",id:1}, {name: "Leo", weight: 4,type:"avoid",id:1}];
-
+            
 
             var factory = {};
             factory.getTagsCloud = function () {
                 getTagsCloudData(function (data) {
+                    return data;
                 });
             };
             factory.getTagsCloudLove = function () {
@@ -58,6 +63,10 @@ angular.module('starter.services', [])
             };
             factory.getTagsCloudAvoid = function () {
                 return tagsCloudAvoid;
+            };
+            
+            factory.getTagsCloudFunction = function () {
+                return tagsCloudData;
             };
             return factory;
         })

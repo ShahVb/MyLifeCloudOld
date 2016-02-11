@@ -1,27 +1,53 @@
 angular.module('starter.controllers', [])
 
-        .controller('TodayCtrl', function ($scope, recentTags, tagsCloud) {
+        .controller('TodayCtrl', function ($scope, recentTags, tagsCloudService) {
             $scope.recent = [];
+            $scope.filterLove = [];
             initRecentTags();
-            $scope.entry = [{love: "", avoid: ""}, {love: "", avoid: ""}, {love: "", avoid: ""}, {love: "", avoid: ""}, {love: "", avoid: ""}];
+            $scope.entry = [{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},
+            {date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""}];
             function initRecentTags() {
-                $scope.recent = recentTags.getRecentTags();
+               
+            tagsCloudService.getTagsCloud();    
+            $scope.recent = tagsCloudService.getTagsCloudFunction();
+             
+            $scope.filterLove =[{type:'love'}];
+            console.log($scope.recent);
             }
             $scope.addFromRecent = function (index, tab) {
-                for (i = 0; i < 5 && $scope.entry[i][tab] != ""; i++)
+                var iStart;
+                var iEnd;
+                console.log(index);
+                console.log(tab);
+                if(tab === "love")
+                { iStart = 0;
+                    iEnd = 5;}
+                else
+                   { iStart = 5;
+                    iEnd = 10;} 
+                
+                for (i = iStart; i < iEnd && $scope.entry[i].name !== ""; i++)
                 {
                 }
-                if (i > 4)
+                console.log(i);
+                if (i > (iEnd-1))
                     alert("Sorry, you have already added 5 tags");
                 else
                 {
-                    $scope.entry[i][tab] = $scope.recent[index][tab];
-                    console.log($scope.recent);
-                    console.log(index);
-                    $scope.recent[index][tab] = null;
+                    var recentIndex = getRecentIndex(index);
+                    $scope.entry[i].name = $scope.recent[recentIndex].name;
+                    console.log(i);
+                    console.log($scope.entry);
+                    $scope.recent[recentIndex] = null;
                     console.log($scope.entry);
                 }
             };
+            function getRecentIndex (id) {
+                for(j=0;j<$scope.recent.length;j++)
+                    if($scope.recent[j]!== null)
+                    if($scope.recent[j].id === id)
+                        return j;
+            }
         })
         .controller('LogInCtrl', function ($scope, $state) {
 
@@ -40,37 +66,7 @@ angular.module('starter.controllers', [])
             //
             //$scope.$on('$ionicView.enter', function(e) {
             //});
-            /*          $scope.love = [
-             {text: "Lorem", weight: 13},
-             {text: "Ipsum", weight: 10.5},
-             {text: "Dolor", weight: 9.4},
-             {text: "Sit", weight: 8},
-             {text: "Amet", weight: 6.2},
-             {text: "Consectetur", weight: 5},
-             {text: "Adipiscing", weight: 5},
-             {text: "Elit", weight: 5},
-             {text: "Nam et", weight: 5},
-             {text: "Leo", weight: 4},
-             {text: "Sapien", weight: 4},
-             {text: "Pellentesque", weight: 3},
-             {text: "habitant", weight: 3},
-             {text: "morbi", weight: 3},
-             {text: "tristisque", weight: 3},
-             {text: "senectus", weight: 3},
-             {text: "et netus", weight: 3},
-             {text: "et malesuada", weight: 3},
-             {text: "fames", weight: 2},
-             {text: "ac turpis", weight: 2},
-             {text: "egestas", weight: 2},
-             {text: "Aenean", weight: 2},
-             {text: "vestibulum", weight: 2},
-             {text: "elit", weight: 2},
-             {text: "sit amet", weight: 2},
-             {text: "metus", weight: 2},
-             {text: "adipiscing", weight: 2},
-             {text: "ut ultrices", weight: 2}
-             ];
-             */
+            
             $scope.tagsCloudLove = [];
             $scope.tagsCloudAvoid = [];
             initTagsCloud();
