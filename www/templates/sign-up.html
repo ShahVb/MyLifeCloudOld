@@ -1,8 +1,11 @@
    
 <ion-view view-title="Create an account">
     <ion-content>
-        
-        <div class="list ">
+
+        <ion-nav-bar class="bar">
+
+        </ion-nav-bar>
+        <div class="list has-header">
             <label class="item item-input">
                 <span class="input-label">Username</span>
                 <input type="text" ng-model="user.username">
@@ -20,14 +23,14 @@
                 <input type="email" ng-model="user.email">
             </label>
         </div>
-       
-            <button class="button button-block button-green" ng-click="logIn(user)">
-                Sign-In
-            </button>
-            <p class="text-center" style="font-size: 60%; padding:5px; ">
-                <a href="#/log-in">Log-In</a>
-            </p>
-        
+
+        <button class="button button-block button-green" ng-click="logIn(user)">
+            Sign-In
+        </button>
+        <p class="text-center" style="font-size: 60%; padding:5px; ">
+            <a href="#/log-in">Log-In</a>
+        </p>
+
     </ion-content>
 </ion-view>
 

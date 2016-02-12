@@ -1,54 +1,73 @@
 angular.module('starter.controllers', [])
 
-        .controller('TodayCtrl', function ($scope, recentTags, tagsCloudService) {
-            $scope.recent = [];
-            $scope.filterLove = [];
+        .controller('TodayCtrl', function ($scope, tagsCloudService) {
+            $scope.recentLove = [];
+            $scope.recentAvoid = [];
+            $scope.entry = [{date: "", type: "love", name: "", description: ""}, {date: "", type: "love", name: "", description: ""}, {date: "", type: "love", name: "", description: ""}, {date: "", type: "love", name: "", description: ""}, {date: "", type: "love", name: "", description: ""},
+                {date: "", type: "avoid", name: "", description: ""}, {date: "", type: "avoid", name: "", description: ""}, {date: "", type: "avoid", name: "", description: ""}, {date: "", type: "avoid", name: "", description: ""}, {date: "", type: "avoid", name: "", description: ""}];
+
             initRecentTags();
-            $scope.entry = [{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},{date: "", type: "love", name:"", description:""},
-            {date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""},{date: "", type: "avoid", name:"", description:""}];
+
             function initRecentTags() {
-               
-            tagsCloudService.getTagsCloud();    
-            $scope.recent = tagsCloudService.getTagsCloudFunction();
-             
-            $scope.filterLove =[{type:'love'}];
-            console.log($scope.recent);
+                tagsCloudService.getTagsCloud();
+                $scope.recentLove = tagsCloudService.getTagsCloudLove();
+                $scope.recentAvoid = tagsCloudService.getTagsCloudAvoid();
             }
-            $scope.addFromRecent = function (index, tab) {
+
+            $scope.addFromRecent = function (id, tab) {
                 var iStart;
                 var iEnd;
-                console.log(index);
-                console.log(tab);
-                if(tab === "love")
-                { iStart = 0;
-                    iEnd = 5;}
+
+                if (tab === "love")
+                {
+                    iStart = 0;
+                    iEnd = 5;
+                }
                 else
-                   { iStart = 5;
-                    iEnd = 10;} 
-                
+                {
+                    iStart = 5;
+                    iEnd = 10;
+                }
+
                 for (i = iStart; i < iEnd && $scope.entry[i].name !== ""; i++)
                 {
                 }
-                console.log(i);
-                if (i > (iEnd-1))
+                if (i > (iEnd - 1))
                     alert("Sorry, you have already added 5 tags");
                 else
                 {
-                    var recentIndex = getRecentIndex(index);
-                    $scope.entry[i].name = $scope.recent[recentIndex].name;
-                    console.log(i);
-                    console.log($scope.entry);
-                    $scope.recent[recentIndex] = null;
-                    console.log($scope.entry);
+                    console.log(id);
+                    var recentIndex = getRecentIndex(id, tab);
+                    if (tab === "love")
+                    {
+                        $scope.entry[i].name = $scope.recentLove[recentIndex].name;
+                        $scope.recentLove[recentIndex] = null;
+                    }
+                    else
+                    {
+                        $scope.entry[i].name = $scope.recentAvoid[recentIndex].name;
+                        $scope.recentAvoid[recentIndex] = null;
+                    }
+                    //console.log($scope.entry);
                 }
             };
-            function getRecentIndex (id) {
-                for(j=0;j<$scope.recent.length;j++)
-                    if($scope.recent[j]!== null)
-                    if($scope.recent[j].id === id)
-                        return j;
+
+            function getRecentIndex(id, tab) {
+                if (tab === "love")
+                {
+                    for (j = 0; j < $scope.recentLove.length; j++)
+                        if ($scope.recentLove[j] !== null)
+                            if ($scope.recentLove[j].id === id)
+                                return j;
+                }
+                else
+                    for (j = 0; j < $scope.recentAvoid.length; j++)
+                        if ($scope.recentAvoid[j] !== null)
+                            if ($scope.recentAvoid[j].id === id)
+                                return j;
             }
         })
+
         .controller('LogInCtrl', function ($scope, $state) {
 
             $scope.logIn = function (user) {
@@ -66,7 +85,7 @@ angular.module('starter.controllers', [])
             //
             //$scope.$on('$ionicView.enter', function(e) {
             //});
-            
+
             $scope.tagsCloudLove = [];
             $scope.tagsCloudAvoid = [];
             initTagsCloud();

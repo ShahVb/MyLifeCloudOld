@@ -8,7 +8,7 @@
                     <h2 class="title ">What were some of the best part of today?</h2>
                     <p></p>
                     <ion-scroll direction="x" class="item " style="padding:5px">
-                        <button data-ng-repeat="item in recent" class="horizontaList button" ng-click="addFromRecent(item.id, 'love');">
+                        <button data-ng-repeat="item in recentLove|filter:{item:'!null'}" class="horizontaList button" ng-click="addFromRecent(item.id, 'love');">
                             {{item.name}}
                         </button>      
                     </ion-scroll>
@@ -28,7 +28,7 @@
                     <h2 class="title ">What could you have avoided today?</h2>
                     <p></p>
                     <ion-scroll direction="x" class="item " style="padding:5px">
-                        <button data-ng-repeat="item in recent|filter:{type:'avoid'}" class="horizontaList button" ng-click="addFromRecent(item.id,'avoid');">
+                        <button data-ng-repeat="item in recentAvoid|filter:{item:'!null'}" class="horizontaList button" ng-click="addFromRecent(item.id,'avoid');">
                             {{item.name}}
                         </button>      
                     </ion-scroll>
