@@ -14,11 +14,11 @@
                     </ion-scroll>
                     <div class="list inputTags">
                         <label style="margin-top: 20px" class="item item-input" data-ng-repeat="item in entry|filter:{type:'love'}" >
-                            <input type="text" ng-model="item.name">
+                            <input name="loveTagInput" type="text" ng-model="item.name" ng-change="entryDataUpdated()">
                         </label>
                     </div>
-                    <button class="button button-full button-green">
-                        Done!
+                    <button class="button button-full button-green" ng-click="submitButtonPressed('love');" ng-disabled="submitValidated">
+                       {{buttonText}}
                     </button>
                 </div>
             </ion-tab>
@@ -37,8 +37,8 @@
                             <input type="text" ng-model="item.name">
                         </label>
                     </div>
-                    <button class="button button-full button-green">
-                        Done!
+                    <button class="button button-full button-green" ng-click="submitButtonPressed('avoid');" ng-disabled="submitValidated">
+                        {{buttonText}}
                     </button>
                 </div>
             </ion-tab>

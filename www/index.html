@@ -21,14 +21,16 @@
         <script src="js/app.js"></script>
         <script src="js/controllers.js"></script>
         <script src="js/services.js"></script>
+        <script src="js/constant.js" type="text/javascript"></script>
         <script src="lib/jqcloud2/dist/angular-jqcloud.js" type="text/javascript"></script>
         <script src="lib/jquery/dist/jquery.min.js" type="text/javascript"></script>
         <link href="lib/jqcloud2/dist/jqcloud.min.css" rel="stylesheet" type="text/css">
         <script src="lib/jqcloud2/dist/jqcloud.min.js" type="text/javascript"></script>
-        
         <script src="lib/backand/backand-min.js" type="text/javascript"></script>
+        <script src="lib/angular-mocks/angular-mocks.js"></script>
+        <link rel="shortcut icon" href="">
     </head>
-    <body data-ng-app="starter">
+    <body data-ng-app="starter" ng-controller="AppCtrl">
     <ion-side-menus>
         <ion-pane ion-side-menu-content="">
             <ion-nav-bar class="bar">
@@ -62,7 +64,7 @@
                             MyLifeCloud
                         </span>
                     </a>
-                    <a class="item item-icon-left" menu-close="" href="#/log-in">
+                    <a class="item item-icon-left" menu-close="" ng-click="logOut()">
                         <i class="icon ion-log-out"></i>
                         Log out.....
                     </a>

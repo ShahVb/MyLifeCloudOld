@@ -6,30 +6,35 @@
 
         </ion-nav-bar>
         <div class="list has-header">
-            <label class="item item-input">
-                <span class="input-label">Username</span>
-                <input type="text" ng-model="user.username">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Password</span>
-                <input type="password" ng-model="user.password">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Name</span>
-                <input type="text" ng-model="user.name">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Email</span>
-                <input type="email" ng-model="user.email">
-            </label>
-        </div>
+            <form name="user" novalidate>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input type="email" name="email" ng-model="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,24})$/" required>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input type="password" name="password" ng-model="password" required> 
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">First Name</span>
+                    <input type="text" name="firstName" ng-model="firstName" required>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Last Name</span>
+                    <input type="text" name="lastName" ng-model="lastName" required>
+                </label>
 
-        <button class="button button-block button-green" ng-click="logIn(user)">
-            Sign-In
-        </button>
-        <p class="text-center" style="font-size: 60%; padding:5px; ">
-            <a href="#/log-in">Log-In</a>
-        </p>
+
+                <button class="button button-block button-green" ng-disabled="user.$invalid" ng-click="signUp(user)">
+                    Sign-Up
+                </button>
+            </form>
+            <p class="text-center" style="font-size: 60%; padding:5px; ">
+                <a href="#/log-in">Log-In</a>
+            </p>
+
+        </div>
+        <div ng-show="login.success" class="alert alert-success">{{login.success}}</div>
 
     </ion-content>
 </ion-view>

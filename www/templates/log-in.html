@@ -2,29 +2,31 @@
 <ion-view view-title="Log-In">
     <ion-content>
         <ion-nav-bar class="bar">
-                  
-            </ion-nav-bar>
+        </ion-nav-bar>
         <div class="list has-header">
-            <label class="item item-input">
-                <span class="input-label">Username</span>
-                <input type="text" ng-model="user.username">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Password</span>
-                <input type="password" ng-model="user.password">
-            </label>
-            <p class="text-right" style="font-size: 50%; padding:5px; margin-bottom: 0px; padding-bottom: 0px; ">
-                <a href="#/forgot-password">Forgot password</a>
-            </p>
+            <form name="user" novalidate>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input type="text" name = "email" ng-model="email" required>
+
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input type="password" name="password" ng-model="password" required>
+                </label>
+                <p class="text-right" style="font-size: 50%; padding:5px; margin-bottom: 0px; padding-bottom: 0px; ">
+                    <a ng-click="logOut()">Forgot password</a>
+                </p>
+                
+                <button class="button button-block button-green" ng-disabled="user.$invalid" ng-click="logIn(user)" data-loading>
+                    Log-In
+                </button>
+                    
+            </form>
         </div>
-       
-            <button class="button button-block button-green" ng-click="logIn(user)">
-                Log-In
-            </button>
-            <p class="text-center" style="font-size: 60%; padding:5px; ">
-                <a href="#/sign-up">Create an account</a>
-            </p>
-        
+        <p class="text-center" style="font-size: 80%; padding:25px; ">
+            <a href="#/sign-up">Create an account</a>
+        </p>
     </ion-content>
 </ion-view>
 

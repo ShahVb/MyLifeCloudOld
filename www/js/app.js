@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'angular-jqcloud', 'backand'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'angular-jqcloud', 'backand', 'ngMockE2E'])
         .run(function ($ionicPlatform) {
             $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -20,10 +20,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                     // org.apache.cordova.statusbar required
                     StatusBar.styleDefault();
                 }
-              
+
             });
         })
-        .config(function ($stateProvider, $urlRouterProvider) {
+
+        .run(function ($httpBackend) {
+            $httpBackend.whenPOST(/api.backand.com\/\w+.*/).passThrough();
+            $httpBackend.whenGET(/api.backand.com\/\w+.*/).passThrough();
+            $httpBackend.whenGET('http://localhost:8100/valid')
+                    .respond({message: 'This is my valid response!'});
+            $httpBackend.whenGET('http://localhost:8100/notauthenticated')
+                    .respond(401, {message: "Not Authenticated"});
+            $httpBackend.whenGET('http://localhost:8100/notauthorized')
+                    .respond(403, {message: "Not Authorized"});
+           $httpBackend.whenGET(/templates\/\w+.*/).passThrough();
+            
+        })
+
+
+        .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+
+            $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
+
+                if ('data' in next && 'authorizedRoles' in next.data) {
+                    var authorizedRoles = next.data.authorizedRoles;
+                    if (!AuthService.isAuthorized(authorizedRoles)) {
+                        event.preventDefault();
+                        $state.go($state.current, {}, {reload: true});
+                        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+                    }
+                    if (!AuthService.isAuthenticated() && next.name !== 'login') {
+                        event.preventDefault();
+                        $state.go('login');
+                    }
+                }
+            });
+        })
+
+        .config(function ($stateProvider, $urlRouterProvider, USER_ROLES) {
 
             // Ionic uses AngularUI Router which uses the concept of states
             // Learn more here: https://github.com/angular-ui/ui-router
@@ -41,7 +75,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                     })
                     .state('signup', {
                         url: '/sign-up',
-                        templateUrl: 'templates/sign-up.html'
+                        templateUrl: 'templates/sign-up.html',
+                        controller: 'LogInCtrl'
                     })
                     // setup an abstract state for the tabs directive
                     .state('tab', {
@@ -57,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                         views: {
                             'tab-today': {
                                 templateUrl: 'templates/tab-today.html',
-                                controller: 'TodayCtrl' 
+                                controller: 'TodayCtrl'
                             }
                         }
                     })
@@ -88,17 +123,50 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                                 templateUrl: 'templates/tab-recommend.html',
                                 controller: 'RecommendCtrl'
                             }
+                        },
+                        data: {
+                            authorizedRoles: [USER_ROLES.paidUser]
                         }
                     });
 
             // if none of the above states are matched, use this as the fallback
-            $urlRouterProvider.otherwise('/log-in');
+            $urlRouterProvider.otherwise(function ($injector, $location) {
+                var $state = $injector.get("$state");
+                $state.go("login");
+            });
 
         })
 
-        
+
         .config(function (BackandProvider) {
             BackandProvider.setAppName('mylifecloud');
             BackandProvider.setSignUpToken('9b4b9cd7-8b32-4591-a432-b02766c98fc8');
             BackandProvider.setAnonymousToken('9a8862bc-72b6-4b0b-976b-f3a653f34fc4');
+        })
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push('AuthInterceptor');
+        })
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push(function ($rootScope) {
+                return {
+                    request: function (config) {
+                        $rootScope.$broadcast('loading:show')
+                        return config
+                    },
+                    response: function (response) {
+                        $rootScope.$broadcast('loading:hide')
+                        return response
+                    }
+                }
+            })
+        })
+
+        .run(function ($rootScope, $ionicLoading) {
+            $rootScope.$on('loading:show', function () {
+                $ionicLoading.show({template: '<ion-spinner></ion-spinner>'})
+            })
+
+            $rootScope.$on('loading:hide', function () {
+                $ionicLoading.hide()
+            })
         });
